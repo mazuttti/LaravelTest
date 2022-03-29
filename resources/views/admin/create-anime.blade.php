@@ -17,13 +17,19 @@
             </div>
         @endif
 
-        <form action="" method="post">
+        <form method="post" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <label for="name" class="form-label">Nome do Anime</label>
                 <input type="text" name="name" id="name" class="form-control" 
                     placeholder="Shingeki no Kyojin" required>     
             </div>
+
+            <div class="mb-3">
+                <label for="img" class="form-label">Imagem do Anime</label>
+                <input type="file" name="img" id="img" class="form-control-file">     
+            </div>
+
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Adicionar</button>
             </div>

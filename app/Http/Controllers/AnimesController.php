@@ -43,7 +43,22 @@ class AnimesController extends Controller
     public function store(AnimesFormRequest $request)
     {
         $name = $request->get('name');
-        $img = '02.jpg';
+
+        if ($request->hasFile('img') and $request->file('img')->isValid()) {
+            $request_img = $request->img;
+
+            $ext = $request_img->extension();
+
+            $img_name = md5($request_img->getClientOriginalName() . strtotime("now")) . "." . $ext;
+
+            $request_img->move(public_path('img/animes'), $img_name);
+
+            $img = $img_name;
+
+        } else {
+            $img = 'not-found.jpg';
+
+        }
 
         $anime = Anime::create([
             'name' => $name,
