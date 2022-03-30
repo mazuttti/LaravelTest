@@ -25,4 +25,4 @@ Route::post('/admin/animes/criar', [AnimesController::class, 'store'])
 Route::get('/admin/animes/criar/temporadas/{id}', [AnimesController::class, 'createSeasons'])
     ->name('criar_temporadas');
 Route::post('/admin/animes/remover/{id}', [AnimesController::class, 'delete'])
-    ->name('deletar_anime');
+    ->name('remover_anime');

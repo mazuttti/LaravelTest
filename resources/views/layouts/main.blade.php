@@ -16,7 +16,7 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
     <div class="container-fluid py-2">
-        <a class="navbar-brand" href="/">AnimeLovers</a>
+        <a class="navbar-brand" href="{{ route('index') }}">AnimeLovers</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
         </button>
@@ -49,7 +49,7 @@
                     Administração
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="/admin/animes">Animes</a></li>
+                    <li><a class="dropdown-item" href="{{ route('admin_animes') }}">Animes</a></li>
                     <li><a class="dropdown-item" href="#">Another action</a></li>
                 </ul>
             </li>

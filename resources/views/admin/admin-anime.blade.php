@@ -30,7 +30,7 @@
 <div class="container my-3 app-container p-0">
     <div class="mx-3 py-3">
         <h3>Administração - Animes</h3>
-        <a href="/admin/animes/criar" class="btn btn-primary mt-2">Adicionar</a>
+        <a href="{{ route('criar_anime') }}" class="btn btn-primary mt-2">Adicionar</a>
     </div>
 
     @if(!empty($message))
@@ -45,7 +45,7 @@
                 <button type="button" class="btn btn-outline-danger" 
                     data-bs-toggle="modal" data-bs-target="#confirmDelete"
                     data-bs-whatever="{{ $anime->name }}"
-                    id="{{ $anime->id }}"
+                    id="{{ route('remover_anime',  $anime->id) }}"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>

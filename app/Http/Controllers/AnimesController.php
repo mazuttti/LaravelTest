@@ -12,25 +12,25 @@ class AnimesController extends Controller
     private string $view;
     private string $current_page;
 
-    private function verifyURL()
+    private function verifyURL($request_data=null)
     {
-        $url = str_replace(url(''), '', url()->current());
+        $url = url()->current();
 
-        if ($url === '') {
+        if ($url === route('index')) {
             $this->current_page = 'index';
             $this->view = 'index';
         
-        } else if ($url === '/admin/animes') {
+        } else if ($url === route('admin_animes')) {
             $this->current_page = 'admin';
             $this->view = 'admin/admin-anime';
         
-        } else if ($url === '/admin/animes/criar') {
+        } else if ($url === route('salvar_anime')) {
             $this->current_page = 'admin';
             $this->view = 'admin/create-anime';
         
         } else if (
-            str_contains($url, '/admin/animes/criar/temporadas/') and 
-            is_numeric($season_number = substr($url, 31)) and $season_number > 0
+            $url === route('criar_temporadas', $request_data) and 
+            is_numeric($request_data) and $request_data > 0
         ) {
             $this->current_page = 'admin';
             $this->view = 'admin/create-seasons-episodes';
@@ -52,13 +52,11 @@ class AnimesController extends Controller
 
     public function createSeasons(Request $request)
     {
-        $this->verifyURL();
+        $this->verifyURL($request->id);
 
         if ($this->view === 'errors/404') {
             return view($this->view);
         }
-
-        echo $request->id;
 
         return view($this->view, [
             'current_page' => $this->current_page
@@ -68,6 +66,7 @@ class AnimesController extends Controller
     public function store(AnimesFormRequest $request)
     {
         $name = $request->get('name');
+        $img = 'not-found.jpg';
 
         if ($request->hasFile('img') and $request->file('img')->isValid()) {
             $request_img = $request->img;
@@ -79,9 +78,6 @@ class AnimesController extends Controller
             $request_img->move(public_path('img/animes'), $img_name);
 
             $img = $img_name;
-
-        } else {
-            $img = 'not-found.jpg';
 
         }
 
@@ -158,6 +154,6 @@ class AnimesController extends Controller
             'alert' => $alert
         ]);
 
-        return redirect('/admin/animes');
+        return redirect()->route('admin_animes');
     }
 }

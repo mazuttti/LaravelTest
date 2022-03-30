@@ -12,7 +12,7 @@ confirmDelete.addEventListener('show.bs.modal', function (event) {
   var modalBodyInput = confirmDelete.querySelector('.modal-body')
   var inputAnimeName = confirmDelete.querySelector('#anime_name')
 
-  document.getElementById('confirmationForm').action = '/admin/animes/remover/' + id;
+  document.getElementById('confirmationForm').action = id;
   modalBodyInput.innerText = 'Desejar remover ' + recipient + '?'
   inputAnimeName.value = recipient
 })
