@@ -34,7 +34,7 @@
     </div>
 
     @if(!empty($message))
-    <div class="alert alert-success">{{ $message }}</div>
+    <div class="alert alert-{{ $message['alert'] }}">{{ $message['message'] }}</div>
     @endif
 
     <ul class="list-group">

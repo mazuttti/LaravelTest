@@ -27,7 +27,13 @@
 
             <div class="mb-3">
                 <label for="img" class="form-label">Imagem do Anime</label>
-                <input type="file" name="img" id="img" class="form-control-file">     
+                <input type="file" name="img" id="img" class="form-control">     
+            </div>
+
+            <div class="mb-3">
+                <label for="seasons_number" class="form-label">Nº de Temporadas</label>
+                <input type="text" name="seasons_number" id="seasons_number" class="form-control" 
+                    placeholder="1-99" pattern="[1-9][0-9]?" required>
             </div>
 
             <div class="mb-3">

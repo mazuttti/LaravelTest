@@ -14,8 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [AnimesController::class, 'index']);
-Route::get('/admin/animes', [AnimesController::class, 'show']);
-Route::get('/admin/animes/criar', [AnimesController::class, 'create']);
-Route::post('/admin/animes/criar', [AnimesController::class, 'store']);
-Route::post('/admin/animes/remover/{id}', [AnimesController::class, 'delete']);
+Route::get('/', [AnimesController::class, 'index'])
+    ->name('index');
+Route::get('/admin/animes', [AnimesController::class, 'show'])
+    ->name('admin_animes');
+Route::get('/admin/animes/criar', [AnimesController::class, 'create'])
+    ->name('criar_anime');
+Route::post('/admin/animes/criar', [AnimesController::class, 'store'])
+    ->name('salvar_anime');
+Route::get('/admin/animes/criar/temporadas/{id}', [AnimesController::class, 'createSeasons'])
+    ->name('criar_temporadas');
+Route::post('/admin/animes/remover/{id}', [AnimesController::class, 'delete'])
+    ->name('deletar_anime');

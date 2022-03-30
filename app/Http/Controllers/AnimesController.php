@@ -12,7 +12,7 @@ class AnimesController extends Controller
     private string $view;
     private string $current_page;
 
-    private function setViewAndCurrentPage()
+    private function verifyURL()
     {
         $url = str_replace(url(''), '', url()->current());
 
@@ -28,12 +28,37 @@ class AnimesController extends Controller
             $this->current_page = 'admin';
             $this->view = 'admin/create-anime';
         
+        } else if (
+            str_contains($url, '/admin/animes/criar/temporadas/') and 
+            is_numeric($season_number = substr($url, 31)) and $season_number > 0
+        ) {
+            $this->current_page = 'admin';
+            $this->view = 'admin/create-seasons-episodes';
+ 
+        } else {
+            $this->view = 'errors/404';
+        
         }
     }
 
     public function create()
     {
-        $this->setViewAndCurrentPage();
+        $this->verifyURL();
+
+        return view($this->view, [
+            'current_page' => $this->current_page
+        ]);
+    }
+
+    public function createSeasons(Request $request)
+    {
+        $this->verifyURL();
+
+        if ($this->view === 'errors/404') {
+            return view($this->view);
+        }
+
+        echo $request->id;
 
         return view($this->view, [
             'current_page' => $this->current_page
@@ -66,16 +91,22 @@ class AnimesController extends Controller
         ]);
 
         /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
-        $request->session()->flash('message', $anime->name . ' adicionado com sucesso.'); 
+        $request->session()->flash('message', [
+            'message' => $anime->name . ' adicionado com sucesso.',
+            'alert' => 'success'
+        ]); 
 
-        return redirect('/admin/animes');
+        return redirect()->route('criar_temporadas', [
+            'id' => $anime->id,
+            'n_temporadas' => $request->seasons_number
+        ]);
     }
     
     public function show(Request $request)
     {
         $animes_list = Anime::all();
         
-        $this->setViewAndCurrentPage();
+        $this->verifyURL();
 
         $message = $request->session()->get('message');
 
@@ -90,7 +121,7 @@ class AnimesController extends Controller
     {
         $animes_list = DB::table('animes')->orderBy('created_at', 'desc')->get()->take(12);
         
-        $this->setViewAndCurrentPage();
+        $this->verifyURL();
 
         return view($this->view, [
             'current_page' => $this->current_page,
@@ -105,10 +136,27 @@ class AnimesController extends Controller
 
     public function delete(Request $request)
     {
-        Anime::destroy($request->id);
+        $response = Anime::destroy($request->id);
+
+        if ($response === 1) {
+            $message = $request->anime_name .' removido com sucesso';
+            $alert = 'success';
+
+        } else if ($response === 0){
+            $message = 'Erro ao tentar remover ' . $request->anime_name;
+            $alert = 'danger';
+
+        } else {
+            $message = 'Erro inesperado';
+            $alert = 'danger';
+
+        }
 
         /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
-        $request->session()->flash('message', $request->anime_name . ' removido com sucesso');
+        $request->session()->flash('message', [
+            'message' => $message,
+            'alert' => $alert
+        ]);
 
         return redirect('/admin/animes');
     }
