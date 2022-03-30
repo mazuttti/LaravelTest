@@ -24,7 +24,7 @@ class AnimesController extends Controller
             $this->current_page = 'admin';
             $this->view = 'admin/admin-anime';
         
-        } else if ($url === route('salvar_anime')) {
+        } else if ($url === route('salvar_anime') or $url === route('criar_anime')) {
             $this->current_page = 'admin';
             $this->view = 'admin/create-anime';
         

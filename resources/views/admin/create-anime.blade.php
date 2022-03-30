@@ -17,7 +17,7 @@
             </div>
         @endif
 
-        <form method="post" enctype="multipart/form-data">
+        <form action="{{ route('salvar_anime') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <label for="name" class="form-label">Nome do Anime</label>
