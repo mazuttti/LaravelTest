@@ -24,5 +24,7 @@ Route::post('/admin/animes/criar', [AnimesController::class, 'store'])
     ->name('salvar_anime');
 Route::get('/admin/animes/criar/temporadas/{id}', [AnimesController::class, 'createSeasons'])
     ->name('criar_temporadas');
+Route::post('/admin/animes/criar/temporadas/{id}', [AnimesController::class, 'storeSeasons'])
+    ->name('salvar_temporadas');
 Route::post('/admin/animes/remover/{id}', [AnimesController::class, 'delete'])
     ->name('remover_anime');

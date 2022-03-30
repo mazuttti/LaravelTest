@@ -6,6 +6,7 @@ use App\Models\Anime;
 use App\Http\Requests\AnimesFormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AnimesController extends Controller
 {
@@ -36,6 +37,7 @@ class AnimesController extends Controller
             $this->view = 'admin/create-seasons-episodes';
  
         } else {
+            $this->current_page = '';
             $this->view = 'errors/404';
         
         }
@@ -58,8 +60,13 @@ class AnimesController extends Controller
             return view($this->view);
         }
 
+        $message = $request->session()->get('message');
+
         return view($this->view, [
-            'current_page' => $this->current_page
+            'current_page' => $this->current_page,
+            'message' => $message,
+            'id' => $request->id,
+            'seasons_number' => $request->seasons_number
         ]);
     }
 
@@ -88,14 +95,22 @@ class AnimesController extends Controller
 
         /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
         $request->session()->flash('message', [
-            'message' => $anime->name . ' adicionado com sucesso.',
+            'anime' => $anime->name,
             'alert' => 'success'
         ]); 
 
         return redirect()->route('criar_temporadas', [
             'id' => $anime->id,
-            'n_temporadas' => $request->seasons_number
+            'seasons_number' => $request->seasons_number
         ]);
+    }
+
+    public function storeSeasons(Request $request)
+    {
+        for ($i = 1; $i <= $request->seasons_number; $i++){
+            $season = 'season_' . $i;
+            $request->$season;
+        }
     }
     
     public function show(Request $request)
@@ -132,6 +147,13 @@ class AnimesController extends Controller
 
     public function delete(Request $request)
     {
+        $anime = Anime::find($request->id);
+
+        if ($anime->img !== 'not-found.jpg') {
+            Storage::disk('public/img')->delete($anime->img);
+            $anime->update(['img' => 'not-found.jpg']);
+        }
+
         $response = Anime::destroy($request->id);
 
         if ($response === 1) {

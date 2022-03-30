@@ -12,7 +12,7 @@
         rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
         crossorigin="anonymous">
 </head>
-<body id="app-bg-body">
+<body class="app-body">
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
     <div class="container-fluid py-2">

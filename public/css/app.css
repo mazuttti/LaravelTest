@@ -1,8 +1,18 @@
-#app-bg-body {
+.app-body {
     background-image: url('/../img/bg.webp');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .app-container {
