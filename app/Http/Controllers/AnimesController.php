@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Anime;
 use App\Http\Requests\AnimesFormRequest;
+use App\Http\Requests\SeasonsEpisodesFormRequest;
 use App\Services\CreateSeasonsEpisodes;
 use App\Services\DeleteSeasonsEpisodes;
 use Illuminate\Http\Request;
@@ -111,7 +112,7 @@ class AnimesController extends Controller
         ]);
     }
 
-    public function storeSeasons(Request $request, CreateSeasonsEpisodes $seasons_episodes)
+    public function storeSeasons(SeasonsEpisodesFormRequest $request, CreateSeasonsEpisodes $seasons_episodes)
     {
         for ($i = 1; $i <= $request->seasons_number; $i++) {
             $number_episodes = 'season_' . $i . '_episodes';
