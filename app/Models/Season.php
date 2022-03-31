@@ -9,6 +9,8 @@ class Season extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['number', 'anime_id'];
+
     public function episodes()
     {
         return $this->hasMany(Episode::class);

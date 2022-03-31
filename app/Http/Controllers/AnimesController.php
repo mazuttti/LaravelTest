@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Anime;
 use App\Http\Requests\AnimesFormRequest;
+use App\Models\Episode;
+use App\Models\Season;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -36,6 +38,10 @@ class AnimesController extends Controller
             $this->current_page = 'admin';
             $this->view = 'admin/create-seasons-episodes';
  
+        } else if ($url === route('editar_anime', $request_data)) {
+            $this->current_page = 'admin';
+            $this->view = 'admin/update-anime';
+
         } else {
             $this->current_page = '';
             $this->view = 'errors/404';
@@ -105,12 +111,21 @@ class AnimesController extends Controller
         ]);
     }
 
-    public function storeSeasons(Request $request)
+    public function storeSeasons(Request $request, SeasonsController $season, EpisodesController $episodes)
     {
-        for ($i = 1; $i <= $request->seasons_number; $i++){
-            $season = 'season_' . $i;
-            $request->$season;
+        for ($i = 1; $i <= $request->seasons_number; $i++) {
+            $number_episodes = 'season_' . $i . '_episodes';
+            $season->storeSeasons($request->id, $i, $request->$number_episodes, $episodes);
+        
         }
+
+        /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
+        $request->session()->flash('message', [
+            'message' => 'Temporadas e episódios criados com sucesso',
+            'alert' => 'success'
+        ]);
+
+        return redirect()->route('admin_animes');
     }
     
     public function show(Request $request)
@@ -140,9 +155,16 @@ class AnimesController extends Controller
         ]);
     }
 
-    public function update()
+    public function update(Request $request)
     {
-        //
+        $this->verifyURL($request->id);
+
+        $seasons_list = DB::table('seasons')->where('anime_id', '=', $request->id)->get();
+
+        return view($this->view, [
+            'current_page' => $this->current_page,
+            'seasons_list' => $seasons_list
+        ]);
     }
 
     public function delete(Request $request)
@@ -154,13 +176,21 @@ class AnimesController extends Controller
             $anime->update(['img' => 'not-found.jpg']);
         }
 
-        $response = Anime::destroy($request->id);
+        $anime->seasons->each( function (Season $season){
+            $season->episodes->each( function (Episode $episode){
+                $episode->delete();
+            });
+            
+            $season->delete();
+        });
 
-        if ($response === 1) {
+        $response = $anime->delete();
+
+        if ($response === true) {
             $message = $request->anime_name .' removido com sucesso';
             $alert = 'success';
 
-        } else if ($response === 0){
+        } else if ($response === false){
             $message = 'Erro ao tentar remover ' . $request->anime_name;
             $alert = 'danger';
 

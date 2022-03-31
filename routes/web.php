@@ -20,6 +20,8 @@ Route::get('/admin/animes', [AnimesController::class, 'show'])
     ->name('admin_animes');
 Route::get('/admin/animes/criar', [AnimesController::class, 'create'])
     ->name('criar_anime');
+Route::get('/admin/animes/editar/{id}', [AnimesController::class, 'update'])
+    ->name('editar_anime');
 Route::post('/admin/animes/criar', [AnimesController::class, 'store'])
     ->name('salvar_anime');
 Route::get('/admin/animes/criar/temporadas/{id}', [AnimesController::class, 'createSeasons'])
