@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Anime;
 use App\Http\Requests\AnimesFormRequest;
 use App\Http\Requests\SeasonsEpisodesFormRequest;
+use App\Http\Requests\UpdateAnimeFormRequest;
 use App\Services\CreateSeasonsEpisodes;
 use App\Services\DeleteSeasonsEpisodes;
 use Illuminate\Http\Request;
@@ -77,12 +78,16 @@ class AnimesController extends Controller
         ]);
     }
 
-    public function store(AnimesFormRequest $request)
+    private function storeImage($request)
     {
-        $name = $request->get('name');
-        $img = 'not-found.jpg';
-
         if ($request->hasFile('img') and $request->file('img')->isValid()) {
+            $old_img = Anime::find($request->id);
+
+            if (isset($old_img) and $old_img->img !== 'not-found.jpg') {
+                echo "teste";
+                Storage::disk('public/img')->delete($old_img->img);
+            }
+
             $request_img = $request->img;
 
             $ext = $request_img->extension();
@@ -91,9 +96,17 @@ class AnimesController extends Controller
 
             $request_img->move(public_path('img/animes'), $img_name);
 
-            $img = $img_name;
-
+            return $img_name;
         }
+
+        return false;
+    }
+
+    public function store(AnimesFormRequest $request)
+    {
+        $name = $request->get('name');
+        $img = $this->storeImage($request);
+        $img =  $img ? $img : 'not-found.jpg';
 
         $anime = Anime::create([
             'name' => $name,
@@ -128,6 +141,18 @@ class AnimesController extends Controller
 
         return redirect()->route('admin_animes');
     }
+
+    public function storeAnimeUpdate(UpdateAnimeFormRequest $request)
+    {
+        if ($img = $this->storeImage($request)) {
+            DB::table('animes')
+                ->where('id', $request->id)
+                ->update(['img' => $img]);
+        
+        }
+        
+        return $request;
+    }
     
     public function show(Request $request)
     {
@@ -160,10 +185,17 @@ class AnimesController extends Controller
     {
         $this->verifyURL($request->id);
 
-        $seasons_list = DB::table('seasons')->where('anime_id', '=', $request->id)->get();
+        $anime = DB::table('animes')->find($request->id);
+
+        $seasons_list = DB::table('animes')
+            ->join('seasons', 'seasons.anime_id', '=', 'animes.id')
+            ->select('seasons.id', 'seasons.number')
+            ->where('animes.id', '=', $request->id)
+            ->get();
 
         return view($this->view, [
             'current_page' => $this->current_page,
+            'anime' => $anime,
             'seasons_list' => $seasons_list
         ]);
     }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AnimesFormRequest extends FormRequest
+class UpdateAnimeFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class AnimesFormRequest extends FormRequest
     {
         return [
             'name' => 'required|min:2|max:255',
-            'seasons_number' => ['required', 'regex:/^[1-9][0-9]?$/']
+            'new_season' => ['nullable', 'regex:/^[1-9][0-9]?$/']
         ];
     }
 
@@ -35,8 +35,7 @@ class AnimesFormRequest extends FormRequest
             'name.required' => 'O campo Nome do Anime é obrigatório.',
             'name.min' => 'O campo Nome do Anime precisa de no minimo 2 caracteres.',
             'name.max' => 'O campo Nome do Anime precisa de no maximo 255 caracteres.',
-            'seasons_number.required' => 'O campo Nº de Temporadas é obrigatório.',
-            'seasons_number.regex' => 'O campo Nº de Temporadas deve ser um número entre 1-99'
+            'new_season.regex' => 'O campo Nº de Temporadas deve ser um número entre 1-99'
         ];
     }
 }
