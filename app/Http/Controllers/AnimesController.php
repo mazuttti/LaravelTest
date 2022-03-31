@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Anime;
 use App\Http\Requests\AnimesFormRequest;
-use App\Models\Episode;
-use App\Models\Season;
+use App\Services\CreateSeasonsEpisodes;
+use App\Services\DeleteSeasonsEpisodes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -111,11 +111,11 @@ class AnimesController extends Controller
         ]);
     }
 
-    public function storeSeasons(Request $request, SeasonsController $season, EpisodesController $episodes)
+    public function storeSeasons(Request $request, CreateSeasonsEpisodes $seasons_episodes)
     {
         for ($i = 1; $i <= $request->seasons_number; $i++) {
             $number_episodes = 'season_' . $i . '_episodes';
-            $season->storeSeasons($request->id, $i, $request->$number_episodes, $episodes);
+            $seasons_episodes->storeSeasonsEpisodes($request->id, $i, $request->$number_episodes);
         
         }
 
@@ -167,7 +167,7 @@ class AnimesController extends Controller
         ]);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request, DeleteSeasonsEpisodes $seasons_episodes)
     {
         $anime = Anime::find($request->id);
 
@@ -176,15 +176,7 @@ class AnimesController extends Controller
             $anime->update(['img' => 'not-found.jpg']);
         }
 
-        $anime->seasons->each( function (Season $season){
-            $season->episodes->each( function (Episode $episode){
-                $episode->delete();
-            });
-            
-            $season->delete();
-        });
-
-        $response = $anime->delete();
+        $response = $seasons_episodes->deleteSeasonsEpisodes($anime);
 
         if ($response === true) {
             $message = $request->anime_name .' removido com sucesso';
