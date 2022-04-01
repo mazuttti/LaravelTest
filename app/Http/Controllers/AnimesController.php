@@ -140,19 +140,38 @@ class AnimesController extends Controller
 
     public function storeAnimeUpdate(UpdateAnimeFormRequest $request, CreateSeasonsEpisodes $seasons_episodes)
     {
+        $id_of_another_anime = DB::table('animes')
+            ->where('name', '=', $request->name)
+            ->select('animes.id')
+            ->first();
+
+        $id_of_another_anime = isset($id_of_another_anime->id) ? $id_of_another_anime->id : null;
+
+        if ($id_of_another_anime !== null and strval($id_of_another_anime) !== $request->id) {
+            /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
+            $request->session()->flash('message', [
+                'message' => $request->name . ' já possui cadastro no sistema.',
+                'alert' => 'danger'
+            ]);
+            
+            return redirect()->route('editar_anime', $request->id);
+        }
+
         if ($img = $this->storeImage($request)) {
             DB::table('animes')
                 ->where('id', $request->id)
                 ->update([
                     'img' => $img,
-                    'name' => $request->name
+                    'name' => $request->name,
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
         
         } else {
             DB::table('animes')
                 ->where('id', $request->id)
                 ->update([
-                    'name' => $request->name
+                    'name' => $request->name,
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
         }
 
@@ -177,7 +196,7 @@ class AnimesController extends Controller
     
     public function show(Request $request)
     {
-        $animes_list = Anime::all();
+        $animes_list = DB::table('animes')->orderBy('created_at', 'desc')->get();
         
         $this->verifyURL();
 
