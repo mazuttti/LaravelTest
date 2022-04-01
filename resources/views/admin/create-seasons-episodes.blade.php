@@ -24,13 +24,11 @@
         <form action="{{ route('salvar_temporadas', $id) . '?seasons_number=' . $seasons_number }}" method="post">
             @csrf
             <div class="row mb-3">
-                <h3>Nº de Episódios:</h3>
-                
                 @for ($i = 1; $i <= $seasons_number; $i++)
                 <div class="col-3">
-                    <label for="season_{{$i}}" class="form-label">Temporada {{ $i }}:</label>
+                    <label for="season_{{$i}}" class="form-label">Nº Episódios da Temporada {{ $i }}:</label>
                     <input type="text" name="season_{{$i}}_episodes" id="season_{{$i}}" class="form-control" 
-                        placeholder="1-99" pattern="[1-9][0-9]?" required>
+                        placeholder="1-99 Episódios" pattern="[1-9][0-9]?" required>
                 </div>
                 @endfor
             </div>

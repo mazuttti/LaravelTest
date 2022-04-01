@@ -24,7 +24,7 @@ class AnimesFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:2|max:255',
+            'name' => 'required|unique:animes,name|min:2|max:255',
             'seasons_number' => ['required', 'regex:/^[1-9][0-9]?$/']
         ];
     }
@@ -33,6 +33,7 @@ class AnimesFormRequest extends FormRequest
     {
         return [
             'name.required' => 'O campo Nome do Anime é obrigatório.',
+            'name.unique' => 'O campo Nome do Anime deve ser unico.',
             'name.min' => 'O campo Nome do Anime precisa de no minimo 2 caracteres.',
             'name.max' => 'O campo Nome do Anime precisa de no maximo 255 caracteres.',
             'seasons_number.required' => 'O campo Nº de Temporadas é obrigatório.',
