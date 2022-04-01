@@ -138,7 +138,7 @@ class AnimesController extends Controller
         return redirect()->route('admin_animes');
     }
 
-    public function storeAnimeUpdate(UpdateAnimeFormRequest $request)
+    public function storeAnimeUpdate(UpdateAnimeFormRequest $request, CreateSeasonsEpisodes $seasons_episodes)
     {
         if ($img = $this->storeImage($request)) {
             DB::table('animes')
@@ -154,6 +154,16 @@ class AnimesController extends Controller
                 ->update([
                     'name' => $request->name
                 ]);
+        }
+
+        if (intval($request->number_episodes) > 1 and intval($request->number_episodes) < 100) {
+            $last_season = DB::table('seasons')
+                ->where('anime_id', $request->id)
+                ->max('number');
+
+            $i = $last_season + 1;
+            $seasons_episodes->storeSeasonsEpisodes($request->id, $i, $request->number_episodes);
+        
         }
 
         /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */

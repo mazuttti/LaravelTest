@@ -35,9 +35,9 @@
             </div>
 
             <div class="mb-3">
-                <label for="new_season" class="form-label">Adicionar nova Temporada:</label>
-                <input type="text" name="new_season" id="new_season" class="form-control" 
-                        placeholder="1-99" pattern="[1-9][0-9]?">
+                <label for="number_episodes" class="form-label">Adicionar nova Temporada:</label>
+                <input type="text" name="number_episodes" id="number_episodes" class="form-control" 
+                        placeholder="1-99 Episódios" pattern="[1-9][0-9]?">
             </div>
 
             <div class="mb-3">
