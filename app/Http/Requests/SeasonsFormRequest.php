@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
-class SeasonsEpisodesFormRequest extends FormRequest
+class SeasonsFormRequest extends FormRequest
 {
     private int $seasons_number;
     
@@ -29,7 +29,7 @@ class SeasonsEpisodesFormRequest extends FormRequest
         $this->seasons_number = $request->seasons_number;
         $rules = [];
         for($i = 1; $i <= $this->seasons_number; $i++) {
-            $rules['season_' . $i . '_episodes'] = ['required', 'regex:/^[1-9][0-9]?$/'];
+            $rules['number_episodes_' . $i] = ['required', 'regex:/^[1-9][0-9]?$/'];
         }
 
         return $rules;
@@ -39,8 +39,8 @@ class SeasonsEpisodesFormRequest extends FormRequest
     {
         $messages = [];
         for($i = 1; $i <= $this->seasons_number; $i++) {
-            $messages['season_' . $i . '_episodes.required'] = 'O campo Nº de Episódios é obrigatório.';
-            $messages['season_' . $i . '_episodes.regex'] = 'O campo Nº de Episódios deve ser um número entre 1-99';
+            $messages['number_episodes_' . $i . '.required'] = 'O campo Nº de Episódios é obrigatório.';
+            $messages['number_episodes_' . $i . '.regex'] = 'O campo Nº de Episódios deve ser um número entre 1-99';
         }
         return $messages;
     }

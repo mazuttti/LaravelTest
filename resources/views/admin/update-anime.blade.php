@@ -26,7 +26,7 @@
             <div class="mb-3">
                 <label for="name" class="form-label">Nome do Anime</label>
                 <input type="text" name="name" id="name" class="form-control" 
-                    placeholder="Shingeki no Kyojin" value="{{ $anime->name }}" pattern="[\w\s]{2,255}" required>     
+                    placeholder="Ex: Shingeki no Kyojin (Deve ser unico)" value="{{ $anime->name }}" pattern="[\w\s]{2,255}" required>     
             </div>
 
             <div class="mb-3">

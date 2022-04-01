@@ -13,11 +13,6 @@
         @foreach ($animes_list as $anime)
         <figure class="col-12 col-sm-5 col-md-3 col-lg-2 card app-card p-0 m-2">
             <a href="#">
-                @php
-                    if (!Storage::disk('public/img')->exists($anime->img)) {
-                        $anime->img = 'not-found.jpg';
-                    }
-                @endphp
                 <img src="{{ asset('img/animes/' . $anime->img) }}" class="card-img-top app-card" alt="Imagem do Anime">
                 <div class="d-flex align-items-center justify-content-center container-fluid position-absolute app-anime-name px-2 py-1">
                     <p class="card-text">{{ $anime->name }}</p>
