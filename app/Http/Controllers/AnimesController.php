@@ -135,12 +135,14 @@ class AnimesController extends Controller
     {
         $anime = Anime::find($request->id);
 
+        DB::beginTransaction();
         if ($anime->img !== 'not-found.jpg') {
             Storage::disk('public/img')->delete($anime->img);
             $anime->update(['img' => 'not-found.jpg']);
         }
 
         $response = $delete_anime->deleteAnime($anime);
+        DB::commit();
 
         if ($response === true) {
             $message = $request->anime_name .' removido com sucesso';
@@ -177,7 +179,9 @@ class AnimesController extends Controller
 
     public function storeSeasons(SeasonsFormRequest $request, CreateSeasons $seasons)
     {
+        DB::beginTransaction();
         $seasons->create($request);
+        DB::commit();
         
         /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
         $request->session()->flash('message', [
