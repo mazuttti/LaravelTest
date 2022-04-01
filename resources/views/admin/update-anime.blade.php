@@ -7,6 +7,10 @@
     <div class="mx-3 py-3">
         <h3>Administração - Editar Animes</h3>
 
+        @if(!empty($message))
+        <div class="alert alert-{{ $message['alert'] }}">{{ $message['message'] }}</div>
+        @endif
+
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="m-0">

@@ -3,14 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anime;
-use App\Http\Requests\AnimesFormRequest;
-use App\Http\Requests\SeasonsEpisodesFormRequest;
-use App\Http\Requests\UpdateAnimeFormRequest;
-use App\Services\CreateSeasonsEpisodes;
-use App\Services\DeleteSeasonsEpisodes;
+use App\Http\Requests\{AnimesFormRequest, SeasonsEpisodesFormRequest, UpdateAnimeFormRequest};
+use App\Services\{CreateSeasonsEpisodes, DeleteSeasonsEpisodes};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{DB, Storage};
 
 class AnimesController extends Controller
 {
@@ -147,11 +143,26 @@ class AnimesController extends Controller
         if ($img = $this->storeImage($request)) {
             DB::table('animes')
                 ->where('id', $request->id)
-                ->update(['img' => $img]);
+                ->update([
+                    'img' => $img,
+                    'name' => $request->name
+                ]);
         
+        } else {
+            DB::table('animes')
+                ->where('id', $request->id)
+                ->update([
+                    'name' => $request->name
+                ]);
         }
+
+        /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
+        $request->session()->flash('message', [
+            'message' => $request->name . ' atualizado com sucesso.',
+            'alert' => 'success'
+        ]);
         
-        return $request;
+        return redirect()->route('editar_anime', $request->id);
     }
     
     public function show(Request $request)
@@ -185,6 +196,8 @@ class AnimesController extends Controller
     {
         $this->verifyURL($request->id);
 
+        $message = $request->session()->get('message');
+
         $anime = DB::table('animes')->find($request->id);
 
         $seasons_list = DB::table('animes')
@@ -196,7 +209,8 @@ class AnimesController extends Controller
         return view($this->view, [
             'current_page' => $this->current_page,
             'anime' => $anime,
-            'seasons_list' => $seasons_list
+            'seasons_list' => $seasons_list,
+            'message' => $message
         ]);
     }
 
