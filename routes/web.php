@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AnimesController;
+use App\Http\Controllers\{AnimesController, SeasonsController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,8 +30,8 @@ Route::post('/admin/animes/editar/{id}', [AnimesController::class, 'storeUpdateA
 Route::post('/admin/animes/remover/{id}', [AnimesController::class, 'deleteAnime'])
     ->name('remover_anime');
 
-Route::get('/admin/animes/criar/temporadas/{id}', [AnimesController::class, 'createSeasons'])
+Route::get('/admin/animes/criar/temporadas/{id}', [SeasonsController::class, 'createSeasons'])
     ->name('criar_temporadas');
-Route::post('/admin/animes/criar/temporadas/{id}', [AnimesController::class, 'storeSeasons'])
+Route::post('/admin/animes/criar/temporadas/{id}', [SeasonsController::class, 'storeSeasons'])
     ->name('salvar_temporadas');
 

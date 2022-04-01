@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anime;
-use App\Http\Requests\{AnimesFormRequest, SeasonsFormRequest, UpdateAnimeFormRequest};
+use App\Http\Requests\{AnimesFormRequest, UpdateAnimeFormRequest};
 use App\Services\{CreateSeasons, DeleteAnime, StoreImg};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{DB, Storage};
@@ -81,7 +81,7 @@ class AnimesController extends Controller
         ]);
     }
 
-    public function storeUpdateAnime(UpdateAnimeFormRequest $request, CreateSeasons $create_seasons)
+    public function storeUpdateAnime(int $id, UpdateAnimeFormRequest $request, CreateSeasons $create_seasons)
     {
         $id_of_another_anime = DB::table('animes')
             ->where('name', '=', $request->name)
@@ -90,19 +90,19 @@ class AnimesController extends Controller
 
         $id_of_another_anime = isset($id_of_another_anime->id) ? $id_of_another_anime->id : null;
 
-        if ($id_of_another_anime !== null and strval($id_of_another_anime) !== $request->id) {
+        if ($id_of_another_anime !== null and $id_of_another_anime !== $id) {
             /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
             $request->session()->flash('message', [
                 'message' => $request->name . ' já possui cadastro no sistema.',
                 'alert' => 'danger'
             ]);
             
-            return redirect()->route('editar_anime', $request->id);
+            return redirect()->route('editar_anime', $id);
         }
 
         if ($img = StoreImg::store($request)) {
             DB::table('animes')
-                ->where('id', $request->id)
+                ->where('id', $id)
                 ->update([
                     'img' => $img,
                     'name' => $request->name,
@@ -111,7 +111,7 @@ class AnimesController extends Controller
         
         } else {
             DB::table('animes')
-                ->where('id', $request->id)
+                ->where('id', $id)
                 ->update([
                     'name' => $request->name,
                     'updated_at' => date("Y-m-d H:i:s")
@@ -119,7 +119,7 @@ class AnimesController extends Controller
         }
 
         if (intval($request->number_episodes) > 1 and intval($request->number_episodes) < 100) {
-            $create_seasons->createOne($request->id, $request->number_episodes);
+            $create_seasons->createOne($id, $request->number_episodes);
         }
 
         /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
@@ -128,7 +128,7 @@ class AnimesController extends Controller
             'alert' => 'success'
         ]);
         
-        return redirect()->route('editar_anime', $request->id);
+        return redirect()->route('editar_anime', $id);
     }
 
     public function deleteAnime(Request $request, DeleteAnime $delete_anime)
@@ -162,31 +162,6 @@ class AnimesController extends Controller
         $request->session()->flash('message', [
             'message' => $message,
             'alert' => $alert
-        ]);
-
-        return redirect()->route('admin_animes');
-    }
-
-    public function createSeasons(Request $request)
-    {
-        return view('admin/create-seasons', [
-            'current_page' => 'admin',
-            'message' => $request->session()->get('message'),
-            'anime_id' => $request->id,
-            'seasons_number' => $request->seasons_number
-        ]);
-    }
-
-    public function storeSeasons(SeasonsFormRequest $request, CreateSeasons $seasons)
-    {
-        DB::beginTransaction();
-        $seasons->create($request);
-        DB::commit();
-        
-        /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */
-        $request->session()->flash('message', [
-            'message' => 'Temporadas e episódios criados com sucesso',
-            'alert' => 'success'
         ]);
 
         return redirect()->route('admin_animes');
