@@ -21,7 +21,7 @@
             </div>
         @endif
 
-        <form action="{{ route('salvar_temporadas', $anime_id) . '?seasons_number=' . $seasons_number }}" method="post">
+        <form action="{{ route('seasons.store', $anime_id) . '?seasons_number=' . $seasons_number }}" method="post">
             @csrf
             <div class="row mb-3">
                 @for ($i = 1; $i <= $seasons_number; $i++)

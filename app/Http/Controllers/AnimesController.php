@@ -55,7 +55,7 @@ class AnimesController extends Controller
             'alert' => 'success'
         ]); 
 
-        return redirect()->route('criar_temporadas', [
+        return redirect()->route('seasons.create', [
             'id' => $anime->id,
             'seasons_number' => $request->seasons_number
         ]);

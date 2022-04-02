@@ -14,24 +14,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [AnimesController::class, 'index'])
-    ->name('index');
+Route::controller(AnimesController::class)->group( function () {
+    Route::get('/', 'index')->name('index');
 
-Route::get('/admin/animes', [AnimesController::class, 'showAnimes'])
-    ->name('admin_animes');
-Route::get('/admin/animes/criar', [AnimesController::class, 'createAnime'])
-    ->name('criar_anime');
-Route::post('/admin/animes/criar', [AnimesController::class, 'storeCreateAnime'])
-    ->name('salvar_anime');
-Route::get('/admin/animes/editar/{id}', [AnimesController::class, 'updateAnime'])
-    ->name('editar_anime');
-Route::post('/admin/animes/editar/{id}', [AnimesController::class, 'storeUpdateAnime'])
-    ->name('salvar_anime_editado');
-Route::post('/admin/animes/remover/{id}', [AnimesController::class, 'deleteAnime'])
-    ->name('remover_anime');
+    Route::get('/admin/animes', 'showAnimes')->name('admin_animes');
 
-Route::get('/admin/animes/criar/temporadas/{id}', [SeasonsController::class, 'createSeasons'])
-    ->name('criar_temporadas');
-Route::post('/admin/animes/criar/temporadas/{id}', [SeasonsController::class, 'storeSeasons'])
-    ->name('salvar_temporadas');
+    Route::get('/admin/animes/criar', 'createAnime')->name('criar_anime');
+    Route::post('/admin/animes/criar', 'storeCreateAnime')->name('salvar_anime');
 
+    Route::get('/admin/animes/editar/{id}', 'updateAnime')->name('editar_anime');
+    Route::post('/admin/animes/editar/{id}', 'storeUpdateAnime')->name('salvar_anime_editado');
+
+    Route::post('/admin/animes/remover/{id}', 'deleteAnime')->name('remover_anime');
+});
+
+Route::controller(SeasonsController::class)
+    ->name('seasons.')
+    ->prefix('/admin/animes/criar/temporadas/')
+    ->group( function () {
+    
+    Route::get('{id}', 'createSeasons')->name('create');
+    Route::post('{id}', 'storeSeasons')->name('store');
+});
