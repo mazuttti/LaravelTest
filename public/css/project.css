@@ -1,0 +1,76 @@
+.app-body {
+    background-image: url('/../img/bg.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+.app-text-danger {
+    color:#ff4136;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.app-container {
+    background-color: white;
+    border-radius: 0.25rem;
+}
+
+.app-svg-light {
+    fill: rgba(var(--bs-light-rgb),var(--bs-text-opacity))!important;
+}
+
+.app-card {
+    min-height: 14rem!important;
+    min-width: 11rem!important;
+    max-height: 21rem!important;
+    max-width: 16.5rem!important;
+    background-color: black!important;
+    border: 2px solid rgb(0, 0, 0)!important;
+    border-radius: 0.5rem!important;
+    box-shadow: 0.7rem 0.7rem 1rem rgb(0, 0, 0);
+}
+
+.app-index-p {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.5rem;
+    color: #f8f9fa;
+    text-align: center;
+}
+
+.app-index-hr {
+    color: #f8f9fa;
+}
+
+.app-anime-name {
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.75);
+    text-align: center;
+    color: white;
+    border-radius: 0rem 0rem 0.5rem 0.5rem;
+    min-height: 3.5rem!important;
+    max-height: 14rem!important;
+    max-width: 22rem!important;
+}
+
+@media (min-width: 150rem) {
+    .app-anime-name {
+        font-size: 1.5rem;
+        min-height: 5rem!important;
+    }
+}
+
+@media (min-width: 200rem) {
+    .app-anime-name {
+        font-size: 2rem;
+        min-height: 10rem!important;
+    }
+}
