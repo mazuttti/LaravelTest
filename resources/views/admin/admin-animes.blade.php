@@ -42,6 +42,6 @@
 </div>
 @endsection
 
-@section('js')
-    <script src="{{ asset('js/app.js') }}"></script>
+@section('project.js')
+    <script src="{{ asset('js/project.js') }}"></script>
 @endsection
