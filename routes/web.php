@@ -33,9 +33,11 @@ Route::controller(SeasonsController::class)
     ->prefix('/admin/animes/')
     ->group( function () {
     
-    Route::get('criar/temporadas/{id}', 'createSeasons')->name('create');
-    Route::post('criar/temporadas/{id}', 'storeSeasons')->name('store');
+    Route::get('criar/temporadas/{id}', 'create')->name('create');
+    Route::post('criar/temporadas/{id}', 'storeCreate')->name('store');
 
-    Route::get('editar/temporadas/{id}', 'update')->name('update');
-    Route::post('editar/temporadas/{id}', 'updateSeasons')->name('storeUpdate');
+    Route::get('editar/temporada/{id}', 'update')->name('update');
+    Route::post('editar/temporada/{id}', 'storeUpdate')->name('storeUpdate');
+
+    Route::post('remover/temporada/{id}', 'delete')->name('delete');
 });

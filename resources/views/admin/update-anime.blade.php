@@ -40,17 +40,26 @@
     </div>
 
     <ul class="list-group">
+        @php
+            $last_season = $seasons_list->last();
+        @endphp
+
         @foreach ($seasons_list as $season)
         <li class="d-flex align-items-center justify-content-between list-group-item">
             {{ $season->number }}ª Temporada ({{ $season->episodes->count() }} episódios)
 
             @include('subviews.update-delete-btn', [
                 'edit_link' => route('seasons.update',  $season->id),
-                'data' => $season->number, 
-                'id' => route('remover_anime',  $season->id)
+                'data' => $season->number . 'ª Temporada', 
+                'id' => route('seasons.delete',  $season->id),
+                'is_it_the_last_season' => $season == $last_season ? true : false
             ])
         </li>
         @endforeach
     </ul>
 </div>
+@endsection
+
+@section('js')
+    <script src="{{ asset('js/app.js') }}"></script>
 @endsection

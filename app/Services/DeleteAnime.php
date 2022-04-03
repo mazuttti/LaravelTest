@@ -22,7 +22,7 @@ class DeleteAnime
         });
     }
 
-    private function deleteEpisodes($season)
+    public function deleteEpisodes($season)
     {
         $season->episodes->each( function (Episode $episode){
             $episode->delete();
