@@ -7,19 +7,9 @@
     <div class="mx-3 py-3">
         <h1 class="mb-4">Administração - Adicionar Temporadas</h1>
 
-        @if (!empty($message))
-        <div class="alert alert-{{ $message['alert'] }}">{{ $message['message'] }}</div>
-        @endif
+        @include('subviews.message', ['message' => $message])
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="m-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        @include('subviews.errors', ['errors' => $errors])
 
         <form action="{{ route('seasons.store', $anime_id) . '?seasons_number=' . $seasons_number }}" method="post">
             @csrf

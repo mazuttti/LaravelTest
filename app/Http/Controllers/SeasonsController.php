@@ -33,4 +33,14 @@ class SeasonsController extends Controller
 
         return redirect()->route('admin_animes');
     }
+
+    public function update()
+    {
+        return 'teste0';
+    }
+
+    public function storeUpdate()
+    {
+        return 'teste0';
+    }
 }

@@ -7,16 +7,8 @@
     <div class="mx-3 py-3">
         <h1 class="mb-4">Administração - Adicionar Anime</h1>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="m-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
+        @include('subviews.errors', ['errors' => $errors])
+        
         <form action="{{ route('salvar_anime') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
