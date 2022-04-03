@@ -13,8 +13,10 @@ class AnimesController extends Controller
     private function getAnimesList()
     {
         return DB::table('animes')
-            ->select('id', 'name', 'img')
-            ->orderBy('updated_at', 'desc')
+            ->join('seasons', 'seasons.anime_id', '=', 'animes.id')
+            ->select('animes.id', 'animes.name', 'animes.img')
+            ->groupBy('animes.id')
+            ->orderBy('animes.updated_at', 'desc')
             ->get();
     }
 
@@ -28,9 +30,20 @@ class AnimesController extends Controller
 
     public function showAnimes(Request $request)
     {
+        $anime_list = $this->getAnimesList();
+        
+        $animes_without_season_list = DB::table('animes')
+            ->leftJoin('seasons', 'seasons.anime_id', '=', 'animes.id')
+            ->select('animes.id', 'animes.name', 'animes.img')
+            ->where('seasons.number', '=', null)
+            ->groupBy('animes.id')
+            ->orderBy('animes.updated_at', 'desc')
+            ->get();
+
         return view('admin/admin-animes', [
             'current_page' => 'admin',
-            'animes_list' => $this->getAnimesList(),
+            'animes_list' => $anime_list,
+            'animes_without_season_list' => $animes_without_season_list,
             'message' => $request->session()->get('message')
         ]);
     }
@@ -65,13 +78,9 @@ class AnimesController extends Controller
     {
         $message = $request->session()->get('message');
 
-        $anime = DB::table('animes')->find($request->id);
+        $anime = Anime::find($request->id);
 
-        $seasons_list = DB::table('animes')
-            ->join('seasons', 'seasons.anime_id', '=', 'animes.id')
-            ->select('seasons.id', 'seasons.number')
-            ->where('animes.id', '=', $request->id)
-            ->get();
+        $seasons_list = $anime->seasons;
 
         return view('admin/update-anime', [
             'current_page' => 'admin',
@@ -106,7 +115,6 @@ class AnimesController extends Controller
                 ->update([
                     'img' => $img,
                     'name' => $request->name,
-                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
         
         } else {
@@ -114,12 +122,17 @@ class AnimesController extends Controller
                 ->where('id', $id)
                 ->update([
                     'name' => $request->name,
-                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
         }
 
-        if (intval($request->number_episodes) > 1 and intval($request->number_episodes) < 100) {
+        if (intval($request->number_episodes) > 0 and intval($request->number_episodes) < 100) {
             $create_seasons->createOne($id, $request->number_episodes);
+
+            DB::table('animes')
+                ->where('id', $id)
+                ->update([
+                    'updated_at' => date("Y-m-d H:i:s")
+                ]);
         }
 
         /** @var Illuminate\Http\Concerns\InteractsWithFlashData $request */

@@ -9,6 +9,10 @@
     min-height: 100vh;
 }
 
+.app-text-danger {
+    color:#ff4136;
+}
+
 main {
     display: flex;
     flex-direction: column;

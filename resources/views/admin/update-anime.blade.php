@@ -49,7 +49,7 @@
     <ul class="list-group">
         @foreach ($seasons_list as $season)
         <li class="d-flex align-items-center justify-content-between list-group-item">
-            Temporada {{ $season->number }}
+            {{ $season->number }}ª Temporada ({{ $season->episodes->count() }} episódios)
 
             <div>
                 <a href="{{ route('editar_anime',  $season->id) }}" class="btn btn-outline-primary">
