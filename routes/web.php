@@ -20,6 +20,7 @@ Route::controller(AnimesController::class)->group( function () {
 
 Route::controller(AnimesController::class)
     ->prefix('/admin/animes')
+    ->middleware('auth')
     ->group( function () {
 
     Route::get('/', 'showAnimes')->name('admin_animes');
@@ -36,6 +37,7 @@ Route::controller(AnimesController::class)
 Route::controller(SeasonsController::class)
     ->name('seasons.')
     ->prefix('/admin/animes')
+    ->middleware('auth')
     ->group( function () {
     
     Route::get('/criar/temporadas/{id}', 'create')->name('create');
@@ -46,12 +48,9 @@ Route::controller(SeasonsController::class)
 
     Route::post('/remover/temporada/{id}', 'delete')->name('delete');
 });
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
+    ->group(function () {
+
+    Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 });

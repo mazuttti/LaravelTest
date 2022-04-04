@@ -41,6 +41,7 @@
                     Gêneros
                 </a>
             </li>
+            @auth
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle
                     <?=  $current_page === 'admin' ? $active : ''; ?>"
@@ -53,14 +54,25 @@
                     <li><a class="dropdown-item" href="#">Another action</a></li>
                 </ul>
             </li>
+            @endauth
         </ul>
         <form class="d-flex me-0 me-lg-2">
             <input class="form-control me-2 btn-outline-light" type="search" placeholder="Buscar" aria-label="Search">
             <button class="btn btn-outline-light" type="submit">Buscar</button>
         </form>
+        @auth
         <div class="btn-group mt-2 mt-lg-0">
-            <a href="#" class="btn btn-outline-light">Entrar | Cadastrar</a>
+            <form action="/logout" method="post">
+                @csrf
+                <button type="submit" class="btn btn-outline-light">Sair</button>
+            </form>
         </div>
+        @endauth
+        @guest
+        <div class="btn-group mt-2 mt-lg-0">
+            <a href="/login" class="btn btn-outline-light">Entrar | Cadastrar</a>
+        </div>
+        @endguest
         </div>
     </div>
     </nav>
